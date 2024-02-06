@@ -15,16 +15,22 @@ class HomePageTest(TestCase):
         self.assertEqual(1, Item.objects.count())
         item = Item.objects.first()
         self.assertEqual(item.text, "A new item")
-        self.assertRedirects(response, "/")
+        self.assertRedirects(response, "/lists/the-only-url/")
 
     def test_save_item_when_necessary(self):
         response = self.client.get("/")
         self.assertEqual(0, Item.objects.count())
 
+
+class ViewListTest(TestCase):
+    def test_view_list_use_list_template(self):
+        response = self.client.get("/lists/the-only-url/")
+        self.assertTemplateUsed(response, "lists/list.html")
+
     def test_can_display_all_items(self):
         Item.objects.create(text="First item")
         Item.objects.create(text="Second item")
-        response = self.client.get("/")
+        response = self.client.get("/lists/the-only-url/")
         self.assertContains(response, "First item")
         self.assertContains(response, "Second item")
 

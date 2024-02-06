@@ -2,18 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Start To-Do lists</title>
+  <title>Your To-Do lists</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-  <h1>Start To-Do lists</h1>
-  <form action="" method="post">
+  <h1>Your To-Do lists</h1>
+  <form action="/" method="post">
   
     <input id="id_new_item" name="new_item" type="text" placeholder="Enter a to-do item">
     {% csrf_token %}
 
   
   </form>
+  <table id="id_list_table">
+    {% for item in items %}
+    <tr>
+      <td>{{ forloop.counter }}. {{ item.text }}</td>
+    </tr>
+    {% endfor %}
+  </table>
   
 </body>
 </html>
