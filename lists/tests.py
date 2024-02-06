@@ -21,6 +21,13 @@ class HomePageTest(TestCase):
         response = self.client.get("/")
         self.assertEqual(0, Item.objects.count())
 
+    def test_can_display_all_items(self):
+        Item.objects.create(text="First item")
+        Item.objects.create(text="Second item")
+        response = self.client.get("/")
+        self.assertContains(response, "First item")
+        self.assertContains(response, "Second item")
+
 
 class ItemModelTest(TestCase):
     def test_create_items_and_retrieves_later(self):

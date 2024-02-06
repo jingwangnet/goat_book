@@ -8,5 +8,5 @@ def home_page(request):
     if request.method == "POST":
         Item.objects.create(text=request.POST["new_item"])
         return redirect("/")
-    context = {"new_item_text": request.POST.get("new_item", "")}
+    context = {"items": Item.objects.all()}
     return render(request, "lists/home.html", context)
