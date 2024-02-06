@@ -11,9 +11,10 @@ def home_page(request):
 def new_list(request):
     new_list = List.objects.create()
     Item.objects.create(text=request.POST["new_item"], list=new_list)
-    return redirect("/lists/the-only-url/")
+    return redirect(f"/lists/{new_list.pk}/")
 
 
-def view_list(request):
-    context = {"items": Item.objects.all()}
+def view_list(request, pk):
+    new_list = List.objects.get(pk=pk)
+    context = {"items": Item.objects.filter(list=new_list)}
     return render(request, "lists/list.html", context)

@@ -29,23 +29,29 @@ class NewListTest(TestCase):
         self.assertEqual(item.list, new_list)
 
     def test_redirect_after_post(self):
-        self.assertRedirects(self.response, "/lists/the-only-url/")
+        new_list = List.objects.first()
+        self.assertRedirects(self.response, f"/lists/{new_list.pk}/")
 
 
 class ViewListTest(TestCase):
     def setUp(self):
         self.new_list = List.objects.create()
-        self.response = self.client.get("/lists/the-only-url/")
+        self.response = self.client.get(f"/lists/{self.new_list.pk}/")
 
     def test_view_list_use_list_template(self):
         self.assertTemplateUsed(self.response, "lists/list.html")
 
-    def test_can_display_all_items(self):
+    def test_can_display_all_items_that_lists(self):
+        self.other_list = List.objects.create()
+        Item.objects.create(text="First other item", list=self.other_list)
+        Item.objects.create(text="Second other item", list=self.other_list)
         Item.objects.create(text="First item", list=self.new_list)
         Item.objects.create(text="Second item", list=self.new_list)
-        self.response = self.client.get("/lists/the-only-url/")
+        self.response = self.client.get(f"/lists/{self.new_list.pk}/")
         self.assertContains(self.response, "First item")
         self.assertContains(self.response, "Second item")
+        self.assertNotContains(self.response, "First other item")
+        self.assertNotContains(self.response, "Second ohter item")
 
 
 class ItemModelTest(TestCase):
