@@ -6,38 +6,46 @@ from .models import Item, List
 
 # Create your tests here.
 class HomePageTest(TestCase):
+    def setUp(self):
+        self.response = self.client.get("/")
+
     def test_home_page_use_home_template(self):
-        response = self.client.get("/")
-        self.assertTemplateUsed(response, "lists/home.html")
+        self.assertTemplateUsed(self.response, "lists/home.html")
 
     def test_save_item_when_necessary(self):
-        response = self.client.get("/")
         self.assertEqual(0, Item.objects.count())
 
 
 class NewListTest(TestCase):
+    def setUp(self):
+        self.response = self.client.post("/lists/new", data={"new_item": "A new item"})
+
     def test_can_save_post_request(self):
-        response = self.client.post("/lists/new", data={"new_item": "A new item"})
+        self.assertEqual(1, List.objects.count())
         self.assertEqual(1, Item.objects.count())
         item = Item.objects.first()
+        new_list = List.objects.first()
         self.assertEqual(item.text, "A new item")
+        self.assertEqual(item.list, new_list)
 
     def test_redirect_after_post(self):
-        response = self.client.post("/lists/new", data={"new_item": "A new item"})
-        self.assertRedirects(response, "/lists/the-only-url/")
+        self.assertRedirects(self.response, "/lists/the-only-url/")
 
 
 class ViewListTest(TestCase):
+    def setUp(self):
+        self.new_list = List.objects.create()
+        self.response = self.client.get("/lists/the-only-url/")
+
     def test_view_list_use_list_template(self):
-        response = self.client.get("/lists/the-only-url/")
-        self.assertTemplateUsed(response, "lists/list.html")
+        self.assertTemplateUsed(self.response, "lists/list.html")
 
     def test_can_display_all_items(self):
-        Item.objects.create(text="First item")
-        Item.objects.create(text="Second item")
-        response = self.client.get("/lists/the-only-url/")
-        self.assertContains(response, "First item")
-        self.assertContains(response, "Second item")
+        Item.objects.create(text="First item", list=self.new_list)
+        Item.objects.create(text="Second item", list=self.new_list)
+        self.response = self.client.get("/lists/the-only-url/")
+        self.assertContains(self.response, "First item")
+        self.assertContains(self.response, "Second item")
 
 
 class ItemModelTest(TestCase):
