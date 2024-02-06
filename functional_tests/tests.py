@@ -32,3 +32,12 @@ class NewVisitorTest(LiveServerTestCase):
         table = self.browser.find_element(By.ID, "id_list_table")
         rows = table.find_elements(By.TAG_NAME, "tr")
         self.assertIn("1. Buy peacook feather", [row.text for row in rows])
+
+        input_box = self.browser.find_element(By.ID, "id_new_item")
+        input_box.send_keys("Make fly")
+        input_box.send_keys(Keys.ENTER)
+        table = self.browser.find_element(By.ID, "id_list_table")
+        rows = table.find_elements(By.TAG_NAME, "tr")
+        self.assertIn("1. Buy peacook feather", [row.text for row in rows])
+        self.assertIn("1. Buy peacook feather", [row.text for row in rows])
+        self.assertIn("2. Make fly", [row.text for row in rows])
