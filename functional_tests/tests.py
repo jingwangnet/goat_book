@@ -24,10 +24,10 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertIn("To-Do lists", header_text)
 
         input_box = self.browser.find_element(By.ID, "id_new_item")
-        self.assertEqual(input_box.get_attribute("plaeholder"), "Enter a to-do list")
+        self.assertEqual(input_box.get_attribute("placeholder"), "Enter a to-do item")
 
         input_box.send_keys("Buy peacook feather")
-        input_box.send_Keys(Keys.ENTER)
+        input_box.send_keys(Keys.ENTER)
 
         table = self.browser.find_element(By.ID, "id_list_table")
         rows = table.find_elements(By.TAG_NAME, "tr")
