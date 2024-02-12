@@ -4,6 +4,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import WebDriverException
 from django.test import LiveServerTestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+import os
 import time
 
 MAX_TIME = 5
@@ -14,6 +15,9 @@ class NewVisitorTest(StaticLiveServerTestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.browser = webdriver.Chrome()
+        cls.test_server = os.environ.get("TEST_SERVER")
+        if cls.test_server:
+            cls.live_server_url = "http://" + cls.test_server
 
     @classmethod
     def tearDownClass(cls):
