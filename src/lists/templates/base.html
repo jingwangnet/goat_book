@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>To-Do lists</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'node_modules/bootstrap/dist/css/bootstrap.min.css' %}">
+</head>
+<body>
+  <div class="container">
+  
+    <div class="row justify-content-center p-5 bg-body-tertiary rounded-3">
+      <div class="col-lg-6 text-center">
+
+        <h1 class="display-1 mb-4">{% block header_text %}{% endblock %}</h1>
+        <form method="post" action="{% block action %}{%endblock %}">
+          <input class="form-control form-control-lg"id="id_new_item" type="text" name="new_item" placeholder="Enter a to-do item">
+          {% csrf_token %}
+        </form>
+
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+        {% block table %}
+        {% endblock %}
+      </div>
+    </div>
+  
+  </div>
+</body>
+</html>

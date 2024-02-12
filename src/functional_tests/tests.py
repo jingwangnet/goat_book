@@ -3,16 +3,21 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import WebDriverException
 from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+import os
 import time
 
 MAX_TIME = 5
 
 
-class NewVisitorTest(LiveServerTestCase):
+class NewVisitorTest(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.browser = webdriver.Chrome()
+        cls.test_server = os.environ.get("TEST_SERVER")
+        if cls.test_server:
+            cls.live_server_url = "http://" + cls.test_server
 
     @classmethod
     def tearDownClass(cls):
@@ -78,3 +83,19 @@ class NewVisitorTest(LiveServerTestCase):
         page = self.browser.find_element(By.TAG_NAME, "body").text
         self.assertNotIn("Buy peacook feather", page)
         self.assertIn("Buy milk", page)
+
+    def test_layout_and_styling(self):
+        self.browser.get(self.live_server_url)
+        self.browser.set_window_size(1024, 768)
+
+        input_box = self.browser.find_element(By.ID, "id_new_item")
+        self.assertAlmostEqual(
+            input_box.location["x"] + input_box.size["width"] / 2, 512, delta=30
+        )
+
+        self.submit_item("Buy peacook feather")
+
+        input_box = self.browser.find_element(By.ID, "id_new_item")
+        self.assertAlmostEqual(
+            input_box.location["x"] + input_box.size["width"] / 2, 512, delta=30
+        )
