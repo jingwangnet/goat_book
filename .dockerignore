@@ -1,0 +1,4 @@
+**/node_modules/
+venv/
+.git
+src/db.sqlite3
