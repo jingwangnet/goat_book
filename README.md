@@ -37,6 +37,9 @@ docker run -p 8888:8888 -it superlists
 ````bash
 cd src
 TEST_SERVER=http://localhost:8888 pyton manage.py test 
+
+docker run --rm -p 8888:8888 -v ./src/db.sqlite3:/src/db.sqlite3 -it superlists
+TEST_SERVER=http://localhost:8888 pyton manage.py test 
 ````
 
 
