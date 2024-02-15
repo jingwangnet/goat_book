@@ -2,3 +2,4 @@
 venv/
 .git
 src/db.sqlite3
+src/static

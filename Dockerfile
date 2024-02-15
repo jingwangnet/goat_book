@@ -14,6 +14,8 @@ COPY --from=frontend /src /src
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-RUN python manage.py migrate
+RUN python manage.py migrate --noinput
+RUN python manage.py collectstatic --noinput
 
+ENV DJANGO_DEBUG_FALSE=1
 CMD gunicorn --bind :8888 superlists.wsgi
