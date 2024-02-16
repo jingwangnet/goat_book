@@ -22,3 +22,6 @@ urlpatterns = [
     path("new", views.new_list, name="new"),
     path("<int:pk>/", views.view_list, name="view"),
 ]
+
+
+app_name = "lists"
