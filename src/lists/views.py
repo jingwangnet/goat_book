@@ -23,12 +23,15 @@ def new_list(request):
 
 
 def view_list(request, pk):
-    new_list = List.objects.get(pk=pk)
-    context = {"list": new_list}
-    return render(request, "lists/list.html", context)
-
-
-def add_item(request, pk):
     list_ = List.objects.get(pk=pk)
-    Item.objects.create(text=request.POST["new_item"], list=list_)
-    return redirect(f"/lists/{list_.pk}/")
+    error = None
+    context = {"list": list_}
+    if request.method == "POST":
+        try:
+            item = Item(text=request.POST["new_item"], list=list_)
+            item.full_clean()
+            item.save()
+            return redirect(f"/lists/{list_.pk}/")
+        except ValidationError:
+            context.update({"error": "You can't have an empty list item"})
+    return render(request, "lists/list.html", context)
