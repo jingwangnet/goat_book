@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <title>To-Do lists</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{% static 'node_modules/bootstrap/dist/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href={% static "node_modules/bootstrap/dist/css/bootstrap.min.css" %}>
 </head>
 <body>
   <div class="container">
@@ -17,6 +17,11 @@
         <form method="post" action="{% block action %}{%endblock %}">
           <input class="form-control form-control-lg"id="id_new_item" type="text" name="new_item" placeholder="Enter a to-do item">
           {% csrf_token %}
+          {% if error %}
+          <div class="has-error">
+            {{ error }}
+          </div>
+          {% endif %}
         </form>
 
       </div>
